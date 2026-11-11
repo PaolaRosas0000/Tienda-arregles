@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+/* Paleta: azul (confianza) como base y fucsia (fiesta) como acento.
+   Cambia estos valores para ajustar la marca en todo el sitio. */
+@theme {
+  --color-ink: #0b1f4d; /* azul marino: fondo oscuro y texto principal */
+  --color-ink-soft: #16306e;
+  --color-cream: #f5f8ff; /* fondo claro */
+  --color-brand: #ff1f8e; /* fucsia: botones y acentos */
+  --color-brand-dark: #e0186f;
+  --color-violet: #1e5eff; /* azul rey: color de confianza */
+  --color-sun: #ffd400;
+  --color-tangerine: #ff6b00;
+  --color-mint: #00e0a4;
+  --color-cyan: #00c8ff;
+
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
+}
+
+@utility bg-fiesta {
+  background-image: linear-gradient(120deg, var(--color-brand) 0%, var(--color-brand-dark) 100%);
+}
+
+@utility bg-trust {
+  background-image: linear-gradient(140deg, var(--color-violet) 0%, var(--color-ink) 100%);
+}
+
+@utility bg-fiesta-warm {
+  background-image: linear-gradient(120deg, var(--color-tangerine) 0%, var(--color-brand) 55%, var(--color-violet) 100%);
+}
+
+@utility bg-fiesta-hero {
+  background-image:
+    radial-gradient(circle at 88% 12%, color-mix(in srgb, var(--color-brand) 45%, transparent) 0, transparent 35%),
+    radial-gradient(circle at 8% 92%, color-mix(in srgb, var(--color-cyan) 45%, transparent) 0, transparent 35%),
+    linear-gradient(130deg, var(--color-violet) 0%, #1747c9 45%, var(--color-ink) 100%);
+}
+
+@utility text-fiesta {
+  background-image: linear-gradient(100deg, var(--color-sun) 0%, var(--color-tangerine) 35%, var(--color-brand) 70%, #b18cff 100%);
+  background-clip: text;
+  color: transparent;
+}
+
+@utility glow-brand {
+  box-shadow: 0 10px 30px -8px color-mix(in srgb, var(--color-brand) 70%, transparent);
+}
+
+body {
+  background: var(--color-cream);
+  color: var(--color-ink);
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(var(--r, 0deg));
+  }
+  50% {
+    transform: translateY(-12px) rotate(var(--r, 0deg));
+  }
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-float,
+  .animate-marquee {
+    animation: none;
+  }
+}

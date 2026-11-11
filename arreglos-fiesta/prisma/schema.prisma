@@ -1,0 +1,79 @@
+// Modelo de datos de la tienda de arreglos.
+// Base de datos: PostgreSQL de Supabase (ver README y .env.example).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL") // conexión con pooler (puerto 6543), la usa la app
+  directUrl = env("DIRECT_URL") // conexión directa (puerto 5432), la usan las migraciones
+}
+
+// Arreglos listos para comprar (catálogo).
+model Product {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  description String
+  occasion    String
+  price       Int // en centavos
+  emoji       String
+  gradient    String // clases de Tailwind para la tarjeta
+  featured    Boolean  @default(false)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+}
+
+// Pasos del armador: base, tamaño, colores, globos, flores, extras.
+model OptionGroup {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  description String
+  position    Int
+  multiple    Boolean  @default(false) // false = elegir una opción
+  required    Boolean  @default(false)
+  options     Option[]
+}
+
+model Option {
+  id          String      @id @default(cuid())
+  groupId     String
+  group       OptionGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  name        String
+  description String      @default("")
+  price       Int // en centavos (por unidad si allowQuantity)
+  emoji       String      @default("")
+  color       String? // hex, para paletas de color
+  allowQuantity Boolean   @default(false)
+  maxQuantity Int         @default(1)
+  position    Int
+  active      Boolean     @default(true)
+}
+
+model Order {
+  id           String      @id @default(cuid())
+  createdAt    DateTime    @default(now())
+  status       String      @default("PENDIENTE") // PENDIENTE, PAGADO, EN_PREPARACION, ENTREGADO, CANCELADO
+  customerName String
+  email        String
+  phone        String
+  address      String
+  eventDate    String
+  notes        String      @default("")
+  total        Int // en centavos, calculado en el servidor
+  items        OrderItem[]
+}
+
+model OrderItem {
+  id        String @id @default(cuid())
+  orderId   String
+  order     Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  kind      String // "producto" | "personalizado"
+  name      String
+  quantity  Int
+  unitPrice Int
+  details   String @default("") // descripción legible del arreglo personalizado
+}
